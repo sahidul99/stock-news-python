@@ -1,4 +1,6 @@
 import requests
+import os
+from twilio.rest import Client
 
 
 STOCK_NAME = "TSLA"
@@ -8,6 +10,9 @@ STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
 STOCK_API = 'H6S76RMRZXBA6ZOS'
+NEWS_API = '2989d645284a45bd8e40944be84c1bdc'
+
+
 
 
     ## STEP 1: Use https://www.alphavantage.co/documentation/#daily
@@ -27,23 +32,33 @@ before_yesterday_closing = float(data[1]['4. close'])
 
 diff = abs(yesterday_closing-before_yesterday_closing)
 percent_diff = (diff/before_yesterday_closing)*100
-#TODO 5. - If TODO4 percentage is greater than 5 then print("Get News").
 if percent_diff > 5:
-    print('GET NEWS')
+    # print('GET NEWS')
     ## STEP 2: https://newsapi.org/ 
-    # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME. 
+    # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
+    pass
 
-#TODO 6. - Instead of printing ("Get News"), use the News API to get articles related to the COMPANY_NAME.
 
-#TODO 7. - Use Python slice operator to create a list that contains the first 3 articles. Hint: https://stackoverflow.com/questions/509211/understanding-slice-notation
+params = {
+        'q': COMPANY_NAME,
+        'sortBy': 'publishedAt',
+        'apiKey': NEWS_API
+    }
+news = requests.get(NEWS_ENDPOINT, params).json()['articles'][:3]
+
+
 
 
     ## STEP 3: Use twilio.com/docs/sms/quickstart/python
     #to send a separate message with each article's title and description to your phone number. 
 
-#TODO 8. - Create a new list of the first 3 article's headline and description using list comprehension.
 
-#TODO 9. - Send each article as a separate message via Twilio. 
+news_formated=[{'title':item['title'],'description':item['description']} for item in news]
+
+#TODO 9. - Send each article as a separate message via Twilio.
+for item in news_formated:
+    print(item['title'])
+    print(item['description'])
 
 
 
